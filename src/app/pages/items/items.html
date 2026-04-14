@@ -1,0 +1,117 @@
+<div class="space-y-6">
+  <div class="flex items-center justify-between">
+    <h1 class="text-2xl font-bold text-gray-800">Items</h1>
+    <button (click)="openAddForm()"
+      class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+      + Add Item
+    </button>
+  </div>
+
+  <!-- Search & Filter Bar -->
+  <div class="flex flex-col sm:flex-row gap-3">
+    <input [value]="searchQuery()" (input)="onSearchChange($any($event.target).value)"
+      placeholder="Search items by name, category, or description..."
+      class="flex-1 border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none" />
+    <select [value]="filterLocation()" (change)="onFilterChange($any($event.target).value)"
+      class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none">
+      <option value="">All Locations</option>
+      @for (loc of locationService.locations(); track loc.id) {
+        <option [value]="loc.id">{{ loc.name }}</option>
+      }
+    </select>
+  </div>
+
+  <!-- Add/Edit Form -->
+  @if (showForm()) {
+    <div class="bg-white rounded-xl shadow-md p-6 border border-gray-200">
+      <h2 class="text-lg font-semibold mb-4">
+        {{ editingItem() ? 'Edit Item' : 'New Item' }}
+      </h2>
+      @if (locationService.locations().length === 0) {
+        <p class="text-amber-600 mb-4">⚠️ You need to add a location first before adding items.
+          <a routerLink="/locations" class="underline">Go to Locations</a>
+        </p>
+      }
+      <form (ngSubmit)="save()" class="space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+            <input id="name" [(ngModel)]="name" name="name" placeholder="e.g. Winter Jacket"
+              class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none" />
+          </div>
+          <div>
+            <label for="category" class="block text-sm font-medium text-gray-700 mb-1">Category</label>
+            <input id="category" [(ngModel)]="category" name="category" placeholder="e.g. Clothes, Tools, Electronics"
+              class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none" />
+          </div>
+        </div>
+        <div>
+          <label for="locationId" class="block text-sm font-medium text-gray-700 mb-1">Location</label>
+          <select id="locationId" [(ngModel)]="locationId" name="locationId"
+            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none">
+            <option value="" disabled>Select a location</option>
+            @for (loc of locationService.locations(); track loc.id) {
+              <option [value]="loc.id">{{ loc.name }}</option>
+            }
+          </select>
+        </div>
+        <div>
+          <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+          <input id="description" [(ngModel)]="description" name="description" placeholder="Optional details"
+            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none" />
+        </div>
+        <div class="flex space-x-3">
+          <button type="submit"
+            class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+            Save
+          </button>
+          <button type="button" (click)="cancel()"
+            class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+
+  <!-- Items List -->
+  @if (filteredItems().length === 0 && itemService.items().length === 0) {
+    <div class="text-center py-12 text-gray-500">
+      <p class="text-lg">No items yet.</p>
+      <p class="text-sm mt-1">Add your first item and assign it to a location.</p>
+    </div>
+  } @else if (filteredItems().length === 0) {
+    <div class="text-center py-12 text-gray-500">
+      <p class="text-lg">No matching items found.</p>
+    </div>
+  } @else {
+    <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      @for (item of filteredItems(); track item.id) {
+        <div class="bg-white rounded-xl shadow-md p-5 border border-gray-200 hover:shadow-lg transition-shadow">
+          <div class="flex items-start justify-between">
+            <div>
+              <h3 class="text-lg font-semibold text-gray-800">{{ item.name }}</h3>
+              @if (item.category) {
+                <span class="inline-block bg-gray-100 text-gray-600 text-xs px-2 py-0.5 rounded mt-1">{{ item.category }}</span>
+              }
+              <p class="text-sm text-gray-500 mt-2">📍 {{ getLocationName(item.locationId) }}</p>
+              @if (item.description) {
+                <p class="text-sm text-gray-400 mt-1">{{ item.description }}</p>
+              }
+            </div>
+          </div>
+          <div class="mt-4 flex space-x-2">
+            <button (click)="openEditForm(item)"
+              class="text-sm text-indigo-600 hover:text-indigo-800 transition-colors">
+              Edit
+            </button>
+            <button (click)="deleteItem(item.id)"
+              class="text-sm text-red-500 hover:text-red-700 transition-colors">
+              Delete
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

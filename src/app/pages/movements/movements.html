@@ -1,0 +1,90 @@
+<div class="space-y-6">
+  <div class="flex items-center justify-between">
+    <h1 class="text-2xl font-bold text-gray-800">Movements</h1>
+    <button (click)="openForm()"
+      class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+      + Log Movement
+    </button>
+  </div>
+
+  <!-- Move Form -->
+  @if (showForm()) {
+    <div class="bg-white rounded-xl shadow-md p-6 border border-gray-200">
+      <h2 class="text-lg font-semibold mb-4">Move an Item</h2>
+      <form (ngSubmit)="save()" class="space-y-4">
+        <div>
+          <label for="itemId" class="block text-sm font-medium text-gray-700 mb-1">Which item?</label>
+          <select id="itemId" [(ngModel)]="selectedItemId" name="itemId"
+            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none">
+            <option value="" disabled>Select an item</option>
+            @for (item of itemService.items(); track item.id) {
+              <option [value]="item.id">{{ item.name }} (at {{ getLocationName(item.locationId) }})</option>
+            }
+          </select>
+        </div>
+        @if (selectedItemId) {
+          <p class="text-sm text-gray-500">
+            📍 Currently at: <strong>{{ getLocationName(getCurrentLocationId()) }}</strong>
+          </p>
+        }
+        <div>
+          <label for="toLocationId" class="block text-sm font-medium text-gray-700 mb-1">Move to</label>
+          <select id="toLocationId" [(ngModel)]="toLocationId" name="toLocationId"
+            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none">
+            <option value="" disabled>Select destination</option>
+            @for (loc of locationService.locations(); track loc.id) {
+              <option [value]="loc.id">{{ loc.name }}</option>
+            }
+          </select>
+        </div>
+        <div>
+          <label for="note" class="block text-sm font-medium text-gray-700 mb-1">Note (optional)</label>
+          <input id="note" [(ngModel)]="note" name="note" placeholder="e.g. Season switch — storing for summer"
+            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none" />
+        </div>
+        <div class="flex space-x-3">
+          <button type="submit"
+            class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+            Move Item
+          </button>
+          <button type="button" (click)="cancel()"
+            class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+
+  <!-- Movement History -->
+  @if (movementService.movements().length === 0) {
+    <div class="text-center py-12 text-gray-500">
+      <p class="text-lg">No movements logged yet.</p>
+      <p class="text-sm mt-1">When you move items between locations, the history will appear here.</p>
+    </div>
+  } @else {
+    <div class="space-y-3">
+      @for (movement of movementService.movements(); track movement.id) {
+        <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-200 flex items-center gap-4">
+          <div class="text-2xl">📦</div>
+          <div class="flex-1">
+            <p class="font-medium text-gray-800">
+              {{ getItemName(movement.itemId) }}
+            </p>
+            <p class="text-sm text-gray-500">
+              {{ getLocationName(movement.fromLocationId) }}
+              <span class="mx-2">→</span>
+              {{ getLocationName(movement.toLocationId) }}
+            </p>
+            @if (movement.note) {
+              <p class="text-xs text-gray-400 mt-1">💬 {{ movement.note }}</p>
+            }
+          </div>
+          <div class="text-xs text-gray-400 text-right">
+            {{ movement.movedAt | date:'medium' }}
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

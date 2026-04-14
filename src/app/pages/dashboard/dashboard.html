@@ -1,0 +1,72 @@
+<div class="space-y-6">
+  <h1 class="text-2xl font-bold text-gray-800">Dashboard</h1>
+
+  <!-- Stats Cards -->
+  <div class="grid gap-4 grid-cols-1 sm:grid-cols-3">
+    <a routerLink="/locations"
+      class="bg-white rounded-xl shadow-md p-6 border border-gray-200 hover:shadow-lg transition-shadow block">
+      <p class="text-sm text-gray-500">Locations</p>
+      <p class="text-3xl font-bold text-indigo-600 mt-1">{{ locationService.locationCount() }}</p>
+    </a>
+    <a routerLink="/items"
+      class="bg-white rounded-xl shadow-md p-6 border border-gray-200 hover:shadow-lg transition-shadow block">
+      <p class="text-sm text-gray-500">Items</p>
+      <p class="text-3xl font-bold text-indigo-600 mt-1">{{ itemService.itemCount() }}</p>
+    </a>
+    <a routerLink="/movements"
+      class="bg-white rounded-xl shadow-md p-6 border border-gray-200 hover:shadow-lg transition-shadow block">
+      <p class="text-sm text-gray-500">Movements</p>
+      <p class="text-3xl font-bold text-indigo-600 mt-1">{{ movementService.movements().length }}</p>
+    </a>
+  </div>
+
+  <!-- Items per Location -->
+  @if (locationService.locations().length > 0) {
+    <div class="bg-white rounded-xl shadow-md p-6 border border-gray-200">
+      <h2 class="text-lg font-semibold text-gray-800 mb-4">Items per Location</h2>
+      <div class="space-y-3">
+        @for (location of locationService.locations(); track location.id) {
+          <div class="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
+            <span class="text-gray-700">{{ location.name }}</span>
+            <span class="bg-indigo-100 text-indigo-700 text-sm font-medium px-3 py-1 rounded-full">
+              {{ itemService.getByLocation(location.id).length }} items
+            </span>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- Recent Movements -->
+  @if (movementService.movements().length > 0) {
+    <div class="bg-white rounded-xl shadow-md p-6 border border-gray-200">
+      <h2 class="text-lg font-semibold text-gray-800 mb-4">Recent Movements</h2>
+      <div class="space-y-3">
+        @for (movement of movementService.movements().slice(0, 5); track movement.id) {
+          <div class="flex items-center gap-3 py-2 border-b border-gray-100 last:border-0">
+            <span class="text-lg">📦</span>
+            <div class="flex-1">
+              <p class="text-sm text-gray-800 font-medium">{{ getItemName(movement.itemId) }}</p>
+              <p class="text-xs text-gray-500">
+                {{ getLocationName(movement.fromLocationId) }} → {{ getLocationName(movement.toLocationId) }}
+              </p>
+            </div>
+            <span class="text-xs text-gray-400">{{ movement.movedAt | date:'short' }}</span>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- Empty state -->
+  @if (locationService.locations().length === 0) {
+    <div class="bg-white rounded-xl shadow-md p-8 border border-gray-200 text-center">
+      <p class="text-xl text-gray-600 mb-2">Welcome to AitchI! 🏠</p>
+      <p class="text-gray-400 mb-4">Start by adding your home locations, then add items and track their movements.</p>
+      <a routerLink="/locations"
+        class="inline-block bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+        Add Your First Location
+      </a>
+    </div>
+  }
+</div>
