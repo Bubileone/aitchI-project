@@ -32,15 +32,16 @@ export class Items {
     const locFilter = this.filterLocation();
 
     if (query) {
-      items = items.filter(item =>
-        item.name.toLowerCase().includes(query) ||
-        item.category.toLowerCase().includes(query) ||
-        item.description.toLowerCase().includes(query)
+      items = items.filter(
+        (item) =>
+          item.name.toLowerCase().includes(query) ||
+          item.category.toLowerCase().includes(query) ||
+          item.description.toLowerCase().includes(query),
       );
     }
 
     if (locFilter) {
-      items = items.filter(item => item.locationId === locFilter);
+      items = items.filter((item) => item.locationId === locFilter);
     }
 
     return items;
@@ -73,9 +74,20 @@ export class Items {
 
     const editing = this.editingItem();
     if (editing) {
-      this.itemService.update(editing.id, this.name.trim(), this.category.trim(), this.locationId, this.description.trim());
+      this.itemService.update(
+        editing.id,
+        this.name.trim(),
+        this.category.trim(),
+        this.locationId,
+        this.description.trim(),
+      );
     } else {
-      this.itemService.add(this.name.trim(), this.category.trim(), this.locationId, this.description.trim());
+      this.itemService.add(
+        this.name.trim(),
+        this.category.trim(),
+        this.locationId,
+        this.description.trim(),
+      );
     }
     this.cancel();
   }

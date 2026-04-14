@@ -1,8 +1,10 @@
 <div class="space-y-6">
   <div class="flex items-center justify-between">
     <h1 class="text-2xl font-bold text-gray-800">Locations</h1>
-    <button (click)="openAddForm()"
-      class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+    <button
+      (click)="openAddForm()"
+      class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+    >
       + Add Location
     </button>
   </div>
@@ -16,21 +18,38 @@
       <form (ngSubmit)="save()" class="space-y-4">
         <div>
           <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Name</label>
-          <input id="name" [(ngModel)]="name" name="name" placeholder="e.g. Bedroom Closet"
-            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none" />
+          <input
+            id="name"
+            [(ngModel)]="name"
+            name="name"
+            placeholder="e.g. Bedroom Closet"
+            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
+          />
         </div>
         <div>
-          <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-          <input id="description" [(ngModel)]="description" name="description" placeholder="e.g. Top shelf of the bedroom closet"
-            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none" />
+          <label for="description" class="block text-sm font-medium text-gray-700 mb-1"
+            >Description</label
+          >
+          <input
+            id="description"
+            [(ngModel)]="description"
+            name="description"
+            placeholder="e.g. Top shelf of the bedroom closet"
+            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
+          />
         </div>
         <div class="flex space-x-3">
-          <button type="submit"
-            class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors">
+          <button
+            type="submit"
+            class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+          >
             Save
           </button>
-          <button type="button" (click)="cancel()"
-            class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors">
+          <button
+            type="button"
+            (click)="cancel()"
+            class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300 transition-colors"
+          >
             Cancel
           </button>
         </div>
@@ -47,23 +66,31 @@
   } @else {
     <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
       @for (location of locationService.locations(); track location.id) {
-        <div class="bg-white rounded-xl shadow-md p-5 border border-gray-200 hover:shadow-lg transition-shadow">
+        <div
+          class="bg-white rounded-xl shadow-md p-5 border border-gray-200 hover:shadow-lg transition-shadow"
+        >
           <div class="flex items-start justify-between">
             <div>
               <h3 class="text-lg font-semibold text-gray-800">{{ location.name }}</h3>
               <p class="text-sm text-gray-500 mt-1">{{ location.description }}</p>
             </div>
-            <span class="bg-indigo-100 text-indigo-700 text-xs font-medium px-2.5 py-1 rounded-full">
+            <span
+              class="bg-indigo-100 text-indigo-700 text-xs font-medium px-2.5 py-1 rounded-full"
+            >
               {{ getItemCount(location.id) }} items
             </span>
           </div>
           <div class="mt-4 flex space-x-2">
-            <button (click)="openEditForm(location)"
-              class="text-sm text-indigo-600 hover:text-indigo-800 transition-colors">
+            <button
+              (click)="openEditForm(location)"
+              class="text-sm text-indigo-600 hover:text-indigo-800 transition-colors"
+            >
               Edit
             </button>
-            <button (click)="deleteLocation(location.id)"
-              class="text-sm text-red-500 hover:text-red-700 transition-colors">
+            <button
+              (click)="deleteLocation(location.id)"
+              class="text-sm text-red-500 hover:text-red-700 transition-colors"
+            >
               Delete
             </button>
           </div>

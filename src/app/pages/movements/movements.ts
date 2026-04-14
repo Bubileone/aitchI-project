@@ -54,7 +54,7 @@ export class Movements {
       this.selectedItemId,
       fromLocationId,
       this.toLocationId,
-      this.note.trim()
+      this.note.trim(),
     );
     this.cancel();
   }
