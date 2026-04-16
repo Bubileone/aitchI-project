@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { StorageService } from './storage';
 import { ItemService } from './item';
 import { Movement } from '../models/movement.model';
@@ -9,14 +9,11 @@ const STORAGE_KEY = 'aitchi_movements';
   providedIn: 'root',
 })
 export class MovementService {
+  private storage = inject(StorageService);
+  private itemService = inject(ItemService);
   private movementsSignal = signal<Movement[]>(this.loadMovements());
 
   readonly movements = this.movementsSignal.asReadonly();
-
-  constructor(
-    private storage: StorageService,
-    private itemService: ItemService,
-  ) {}
 
   private loadMovements(): Movement[] {
     return this.storage.get<Movement>(STORAGE_KEY);

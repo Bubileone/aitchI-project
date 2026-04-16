@@ -1,4 +1,4 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, inject, signal, computed } from '@angular/core';
 import { StorageService } from './storage';
 import { Item } from '../models/item.model';
 
@@ -8,13 +8,12 @@ const STORAGE_KEY = 'aitchi_items';
   providedIn: 'root',
 })
 export class ItemService {
+  private storage = inject(StorageService);
   private itemsSignal = signal<Item[]>(this.loadItems());
 
   readonly items = this.itemsSignal.asReadonly();
 
   readonly itemCount = computed(() => this.itemsSignal().length);
-
-  constructor(private storage: StorageService) {}
 
   private loadItems(): Item[] {
     return this.storage.get<Item>(STORAGE_KEY);

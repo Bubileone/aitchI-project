@@ -1,4 +1,4 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, inject, signal, computed } from '@angular/core';
 import { StorageService } from './storage';
 import { Location } from '../models/location.model';
 
@@ -8,13 +8,12 @@ const STORAGE_KEY = 'aitchi_locations';
   providedIn: 'root',
 })
 export class LocationService {
+  private storage = inject(StorageService);
   private locationsSignal = signal<Location[]>(this.loadLocations());
 
   readonly locations = this.locationsSignal.asReadonly();
 
   readonly locationCount = computed(() => this.locationsSignal().length);
-
-  constructor(private storage: StorageService) {}
 
   private loadLocations(): Location[] {
     return this.storage.get<Location>(STORAGE_KEY);
